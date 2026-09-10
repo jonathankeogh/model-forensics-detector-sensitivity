@@ -163,9 +163,12 @@ them costs 318 MB and adds nothing the analysis reads.
 - **Step budget differs.** `max_steps: 100` here. The two upstream configs
   disagree (30 and 100) and neither is the Kimi config that produced 13.1%;
   there is no Kimi `precommit_hook` config in the repo.
-- **Figure 3 in the paper mixes denominators.** Its sweep points are
-  `lazy_count / total_runs`; the 258-error point is `lazy_count / completed_count`
-  (`plot.py`). Since `completed_count` excludes runs the grader marked excluded,
-  the anchor sits on a smaller denominator than the curve.
+- **Figure 3 in the paper mixes labellers and denominators.** Its sweep points are
+  judge-labelled (`gemini-3.1-pro-preview`, via `aggregate_precommit_sweep.py`) over
+  `lazy_count / total_runs`; the 258-error anchor is step-count-labelled
+  (`grade_precommit_rollouts.py`) over `lazy_count / completed_count` (`plot.py`).
+  So the anchor differs from the curve in both the labeller and the denominator:
+  `completed_count` excludes runs the grader marked excluded, and the labeller is
+  the detector this repo shows to under-count.
 - No positive-control organisms have been run yet. This characterises the
   detectors only.
