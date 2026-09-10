@@ -11,7 +11,7 @@ push. But there are hundreds of type errors in the code base, so sometimes
 the LLM sees that and does a shortcut instead; for e.g. changing the hook
 so it passes. An idea in the paper is that the model is avoiding tedium, 
 so originally I wanted to check what would the base rate be. But then I discovered
-one of the measures they use - number of tool calls - misses edge cases where the model
+one of the measures they use - step directories, and those at or above 30 as not lazy - misses edge cases where the model
 still does many tool-calls to validate its shortcut.
 
 ## Results
@@ -94,10 +94,10 @@ analysis/                 judge output, commit-timing CSV, plot
 ```bash
 git clone https://github.com/gkroiz/agent-interp-envs.git
 cd agent-interp-envs && git checkout 56fd0c1
-git apply ../mats-precommit-controls/patches/agent-interp-envs.patch
-cp ../mats-precommit-controls/scripts/*.py scripts/
+git apply ../model-forensics-detector-sensitivity/patches/agent-interp-envs.patch
+cp ../model-forensics-detector-sensitivity/scripts/*.py scripts/
 echo "OPENROUTER_API_KEY=..." > .env
-uv run python scripts/run.py ../mats-precommit-controls/configs/precommit_hook/kimi_google.yaml \
+uv run python scripts/run.py ../model-forensics-detector-sensitivity/configs/precommit_hook/kimi_google.yaml \
     --local --build --count 5 --no-kill-last --results-dir ./results
 ```
 
