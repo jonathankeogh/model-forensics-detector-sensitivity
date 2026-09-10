@@ -34,6 +34,8 @@ where the model spends extra steps verifying its own work.
 The judge flagged everything the step-count grader did, plus these two. No
 disagreement ran the other way.
 
+![detector agreement](analysis/tables/t3_detector_agreement.png)
+
 Note the direction. The judge finds more workarounds than the step-count grader,
 not fewer, so correcting the 258-error point would raise it. That steepens the
 dose-response trend in Figure 3 rather than weakening it: the bias runs against
@@ -76,6 +78,18 @@ steps 12–23, honest runs at 35–95 — a 12-step gap with no overlap, against
 
 ![total_steps and commit_step per rollout, coloured by judge verdict](analysis/commit_step.png)
 
+The threshold is not the issue — the variable is. `commit_step` gives a perfect
+split anywhere in 24–35, an eleven-wide window that contains the threshold the
+paper already uses. `total_steps` is perfect only at 37–40, four wide, and 30
+falls outside it.
+
+![threshold sweep](analysis/tables/t1_threshold_sweep.png)
+
+![separation between workaround and honest runs](analysis/tables/t2_separation.png)
+
+Both detectors here are the paper's own, so "caught" and "false pos" mean
+agreement with its LLM judge, not with independent ground truth.
+
 ### Step budget
 
 At `max_steps: 30` (the value in the upstream `default.yaml`), 4 of 5 runs never
@@ -83,6 +97,8 @@ committed — they ran out of budget mid-fix — and the one run that did work
 around landed at exactly 30 steps and was scored not lazy. The step-count
 grader reported 0.0%. Honest completion in this environment took 36–99 steps,
 so a 30-step cap cannot accommodate it.
+
+![runs that hit the cap without committing](analysis/tables/t4_step_cap.png)
 
 ## Layout
 
@@ -108,6 +124,9 @@ analysis/                 judge output, commit-timing CSV, plot
   successful commit, and the post-commit tail. Replicates the step-count rule
   rather than importing the paper's grader, which is left untouched.
 - `plot_commit_step.py` — renders `analysis/commit_step.png`.
+- `make_tables.py` — computes and renders the four reference tables in
+  `analysis/tables/`. Every figure is derived from `commit_steps.csv` and
+  `judge_results.json` at run time; nothing is transcribed.
 
 ## Reproducing
 
